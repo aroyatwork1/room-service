@@ -1,0 +1,3 @@
+D:\XMS\calendar-service-poc\obj\Debug\calendar-poc.njsprojAssemblyReference.cache
+D:\XMS\calendar-service-poc\obj\Debug\calendar-poc.njsproj.CoreCompileInputs.cache
+D:\XMS\calendar-service-poc\bin\Microsoft.NodejsTools.WebRole.dll

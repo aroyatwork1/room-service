@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendar Service</title>
+  <link rel="stylesheet" type="text/css" href="index.css">
+</head>
+
+<body id="body" onload="getGraphCode()">
+  <div class="c-container">
+    <h1>Welcome: please sign in</h1>
+    <div class="c-login">
+      <button id="signIn" class="c-input" onclick="loginGraph()">Sign In</button>
+      <button id="signOut" class="c-input"
+        onclick="location.href='https://login.microsoftonline.com/common/oauth2/v2.0/logout'" disabled>Sign Out</button>
+    </div>
+    <form class="c-form" id="form-id" onsubmit="validateForm()">
+      <h1>Select a calendar and fill in a box id</h1>
+      <div class="c-form--inputs">
+        <select class="c-input" name="calendars" id="calendars" required>
+          <option value="" disabled selected>Select Calendar</option>
+        </select>
+        <input class="c-input" id="box-id" name="boxId" type="text" placeholder="Box Id" required>
+        <button class="c-input" type="submit" id="submit-button">Link Box</button>
+      </div>
+    </form>
+    <div id="goodResponse">
+      <p style="color: green;">Link saved!</p>
+    </div>
+    <div id="badResponse">
+      <p style="color: red;">Link not saved, something went wrong!</p>
+    </div>
+    <!-- Really do not like the sonar cube obligation to add a table description so hiding it at the moment.
+      Would propose to change out for a Css layout when the typescript conversion is done. -->
+    <p id="table-info" aria-hidden="true" hidden>Table to display database content.</p>
+    <div id='tableDiv'>
+      <table id="alreadyConfiguredLinks" aria-describedby="table-info">
+        <th scope="col"></th>
+      </table>
+    </div>
+  </div>
+</body>
+<script src="index.js"></script>
+
+</html>

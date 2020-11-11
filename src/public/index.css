@@ -1,0 +1,71 @@
+body{
+  height: 95vh;
+}
+
+form {
+  margin-top: 20px;
+  width:100%;
+}
+
+table {
+  max-width: 100vw;
+  padding: 5px;
+}
+
+#tableDiv {
+  max-height: 50vh;
+  overflow-y: auto;
+  border: 1px solid black;
+}
+
+td {
+  max-width: 25vw;
+  min-width: 70px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+h1{
+  text-align: center;
+}
+
+.c-container{
+  display: flex; 
+  flex-direction: column; 
+  justify-content: center; 
+  align-items:center; 
+  margin: 0 30%; 
+  height: 100%;
+}
+
+.c-login{
+  display: flex;
+  width: 100%;
+}
+
+.c-form--inputs{
+  display: flex; 
+  width: 100%;
+}
+
+.c-input{
+  padding: 10px;
+  margin: 10px; 
+  width: 100%;
+}
+
+/* https://getbootstrap.com/docs/4.1/layout/overview/#responsive-breakpoints */
+@media screen and (max-width: 991.98px){
+  .c-container{
+    margin: 0 15vw;
+  }
+  .c-form--inputs{
+    display: block;
+  }
+  .c-input{
+    width: -webkit-fill-available;
+    width: -moz-available;
+    width: stretch;
+  }
+}
