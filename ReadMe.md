@@ -78,7 +78,7 @@ For dev purpose we can create a token on https://jwt.io using the debugger
 ```
 ```JSON
 // put in the signature
-"your-256-bit-secret" => ChimayDevelopment
+"your-256-bit-secret" => TestDevelopment
 ```
 
 You can then copy the token an use to authenticate the userApi, using ```authorization: bearer <token>``` scheme.
