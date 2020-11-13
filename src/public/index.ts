@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-use-before-define */
 const clientId = '71f93dbd-0d08-4d5d-9747-24b751994390';
 // const scopes = 'offline_access Calendars.Read Place.Read Place.Read.All Application.ReadWrite.All Directory.AccessAsUser.All User.Read Organization.Read.All Directory.Read.All Organization.ReadWrite.All Directory.ReadWrite.All Organization.Read.All Directory.Read.All Organization.ReadWrite.All Directory.ReadWrite.All';
-const scopes = 'User.Read.All Place.Read.All Application.ReadWrite.OwnedBy Directory.ReadWrite.All Organization.ReadWrite.All AppRoleAssignment.ReadWrite.All';
+const scopes = 'User.Read.All Place.Read.All Application.ReadWrite.OwnedBy Application.ReadWrite.All Directory.ReadWrite.All Organization.ReadWrite.All AppRoleAssignment.ReadWrite.All';
 const signInButton = document.getElementById('signIn') as HTMLButtonElement;
 const signOutButton = document.getElementById('signOut') as HTMLButtonElement;
 const form = document.getElementById('form-id') as HTMLFormElement;
@@ -24,6 +24,9 @@ let organizationInfo: any;
 let createdApplication: any;
 let clientCredentail: any;
 let deviceIdentityServicePrincipal: any;
+let consentedAppInfo: any;
+let consentedServicePrincipal: any;
+let servicePrincipalSecret: any;
 const requiredResourceAccess = {
   resourceAppId: '00000003-0000-0000-c000-000000000000',
   resourceAccess: [{"id": "798ee544-9d2d-430c-a058-570e29e34338", "type": "Role"},{"id": "df021288-bdef-4463-88db-98f22de89214", "type": "Role"}]
@@ -90,6 +93,15 @@ async function getGraphCode() {
     // Get list of Azure AD Applications that are registered in the signed in user's AD
     await getAllRegisteredADApplications(tokens);
 
+    // Get The consented Barco App
+    await getConsentedBarcoApplication(tokens);
+
+    // Get The ServicePrincipal of the consented Barco App
+    await getConsentedBarcoApplicationServicePrincipal(tokens);
+    
+    // Add secret to the Selected Service Principal
+    await addSecretToServicePrincipal(tokens, consentedServicePrincipal.id);
+    
     // Create a Device Azure AD app in to Client's Azure AD
     await createAzureADApp(tokens);
 
@@ -340,6 +352,74 @@ async function getAllRegisteredADApplications(tokens: msGraphTokens): Promise<an
         console.log('*************************************************');
         resolve();
       },
+    );
+  });
+}
+
+async function getConsentedBarcoApplication(tokens: msGraphTokens): Promise<any> {
+  return new Promise((resolve, reject) => {
+    callUrlWithToken(
+      new URL('https://graph.microsoft.com/v1.0/applications?$search="displayName:room-service"'),
+      tokens.access_token,
+      (data: any) => {
+        console.log('*************************************************');
+        console.log('GET AZURE AD APPLICATION')
+        
+        // Remove this code, when the API starts to work correctly and only the searched criteria is met
+        // For the app user, this API should not return the app and the .find shhould return undefined
+        const app = data.value.find((app: any) => {
+          return app.displayName === 'room-service';
+        });
+        // Done
+
+        consentedAppInfo = app || data.value[0];
+        console.dir(consentedAppInfo);
+        console.log('*************************************************');
+        resolve();
+      },
+    );
+  });
+}
+
+async function getConsentedBarcoApplicationServicePrincipal(tokens: msGraphTokens): Promise<any> {
+  return new Promise((resolve, reject) => {
+    callUrlWithToken(
+      new URL('https://graph.microsoft.com/v1.0/servicePrincipals?$search="displayName:room-service"'),
+      tokens.access_token,
+      (data: any) => {
+        console.log('*************************************************');
+        console.log('GET AZURE AD SERVICEPRINCIPAL');
+
+        // Remove this code, when the API starts to work correctly and only the searched criteria is met
+        const app = data.value.find((app: any) => {
+          return app.displayName === 'room-service';
+        });
+        // Done
+
+        consentedServicePrincipal = app || data.value[0];
+        console.dir(consentedServicePrincipal);
+        console.log('*************************************************');
+        resolve();
+      },
+    );
+  });
+}
+
+async function addSecretToServicePrincipal(tokens: msGraphTokens, servicePrincipalId: string): Promise<any> {
+  return new Promise((resolve, reject) => {
+    callUrlWithToken(
+      new URL(`https://graph.microsoft.com/v1.0/servicePrincipals/${servicePrincipalId}/addPassword`),
+      tokens.access_token,
+      (data: any) => {
+        console.log('*************************************************');
+        console.log('CREATE SERVICEPRINCIPAL SECRET')
+        servicePrincipalSecret = data;
+        console.dir(data);
+        console.log('*************************************************');
+        resolve();
+      },
+      null,
+      { "displayName": "default-secret-added" }
     );
   });
 }
