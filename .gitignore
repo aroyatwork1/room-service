@@ -3,3 +3,5 @@
 reports
 coverage
 .nyc_output
+
+sampleNodeApps/node_modules
